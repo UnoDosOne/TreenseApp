@@ -2,37 +2,44 @@ import * as React from "react";
 import { Image } from "expo-image";
 import { StyleSheet, View, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import SignUpFormContainer from "../components/SignUpFormContainer";
+import SignUpForm from "../components/SignUpFormContainer";
 import { Color } from "../GlobalStyles";
 
 const Registeration = () => {
-  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+  const navigation = useNavigation();
 
   return (
-    <Pressable
+    <View
       style={styles.registeration}
-      onPress={() => navigation.navigate("Welcome")}
+      
     >
-      <SignUpFormContainer />
-      <Image
-        style={styles.backIcon}
+      <Pressable style={styles.backIcon1} onPress={() => navigation.navigate("Welcome")}>
+        <Image
+        style={styles.backIcon2}
         contentFit="cover"
         source={require("../assets/back1.png")}
-      />
-    </Pressable>
+        />
+      </Pressable>
+
+      <SignUpForm />
+
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  backIcon: {
-    position: "absolute",
-    top: 20,
-    left: 20,
-    width: 10,
-    height: 16,
+  backIcon1: {
+    marginLeft: 25,
+    marginTop: 80,
+    width: 15,
+    height: 20,
+  },
+  backIcon2: {
+    width: 15,
+    height: 20,
   },
   registeration: {
-    backgroundColor: Color.colorDarkseagreen,
+    backgroundColor: "#8fd296",
     flex: 1,
     width: "100%",
     height: 840,

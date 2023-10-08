@@ -6,45 +6,50 @@ import ForgotPasswordContainer from "../components/ForgotPasswordContainer";
 import { FontSize, FontFamily, Color } from "../GlobalStyles";
 
 const ForgotPass = () => {
-  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+  const navigation = useNavigation();
 
   return (
-    <Pressable
-      style={styles.forgotPass}
-      onPress={() => navigation.navigate("LogIn")}
-    >
-      <ForgotPasswordContainer />
-      <Image
-        style={[styles.backIcon, styles.logoPosition]}
-        contentFit="cover"
-        source={require("../assets/back.png")}
-      />
-      <View style={[styles.logo, styles.logoPosition]}>
-        <Image
-          style={styles.psychiatry2Icon}
+    <View style={styles.logIn}>
+      <View style={styles.logIn2}>
+        <Pressable style={styles.backIcon1} onPress={() => navigation.navigate("LogIn")}>
+          <Image
+          style={styles.backIcon2}
           contentFit="cover"
-          source={require("../assets/psychiatry-21.png")}
-        />
-        <Text style={styles.treense}>TREENSE</Text>
+          source={require("../assets/back1.png")}
+          />
+        </Pressable>
+        
+        <View style={[styles.frame, styles.logoFlexBox]}>
+          <View style={[styles.logo, styles.logoFlexBox]}>
+            <Image
+              style={styles.psychiatry2Icon}
+              contentFit="cover"
+              source={require("../assets/psychiatry-22.png")}
+            />
+            <Text style={styles.treense}>TREENSE</Text>
+          </View> 
+        </View>
+        <ForgotPasswordContainer />
       </View>
-    </Pressable>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  logoPosition: {
-    position: "absolute",
+  logoFlexBox: {
+    alignItems: "center",
     overflow: "hidden",
+    height: 270,
   },
-  backIcon: {
-    height: "1.68%",
-    width: "2.35%",
-    top: "2.15%",
-    right: "93%",
-    bottom: "96.18%",
-    left: "4.65%",
-    maxWidth: "100%",
-    maxHeight: "100%",
+  backIcon1: {
+    marginLeft: 20,
+    marginTop: 75,
+    width: "100%",
+    height: 20,
+  },
+  backIcon2: {
+    width: 15,
+    height: 20,
   },
   psychiatry2Icon: {
     width: 195,
@@ -60,17 +65,29 @@ const styles = StyleSheet.create({
     height: 55,
   },
   logo: {
-    top: 52,
-    left: 88,
-    width: 255,
-    height: 258,
-    alignItems: "center",
+    alignSelf: "stretch",
+    height: 270,
+  
   },
-  forgotPass: {
-    backgroundColor: Color.colorDarkseagreen,
+  frame: {
+    width: 300,
+    justifyContent: "center",
+    marginLeft: 17,
+  },
+  logIn: {
+    backgroundColor: "#8fd296",
     flex: 1,
     width: "100%",
     height: 840,
+    flexDirection: "row",
+    padding: 15,
+    overflow: "hidden",
+  },
+  logIn2: {
+    backgroundColor: "#8fd296",
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
     overflow: "hidden",
   },
 });

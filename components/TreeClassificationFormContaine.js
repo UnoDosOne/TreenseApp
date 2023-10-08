@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FontSize, Border, Color, FontFamily } from "../GlobalStyles";
 
 const TreeClassificationFormContaine = () => {
-  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+  const navigation = useNavigation();
 
   return (
     <View style={styles.capture}>

@@ -7,11 +7,12 @@ import {
   Pressable,
   TouchableHighlight,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, StackNavigationProp } from "@react-navigation/native";
+import { ParamListBase } from "@react-navigation/routers";
 import { FontFamily, FontSize, Color, Padding } from "../GlobalStyles";
 
 const Welcome = () => {
-  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+  const navigation = useNavigation();
 
   return (
     <View style={[styles.welcome, styles.logoFlexBox]}>
@@ -25,7 +26,7 @@ const Welcome = () => {
       </View>
       <Pressable style={styles.frame}>
         <TouchableHighlight
-          style={[styles.login, styles.loginFlexBox]}
+          style={[styles.login, styles.loginFlexBox1]}
           underlayColor="#f5efef"
           onPress={() => navigation.navigate("LogIn")}
         >
@@ -35,8 +36,8 @@ const Welcome = () => {
         </TouchableHighlight>
         <Text style={[styles.text, styles.textTypo]}>|</Text>
         <TouchableHighlight
-          style={styles.loginFlexBox}
-          underlayColor="#fff"
+          style={styles.loginFlexBox2}
+          underlayColor="#f5efef"
           onPress={() => navigation.navigate("Registeration")}
         >
           <Pressable onPress={() => navigation.navigate("Registeration")}>
@@ -53,7 +54,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     overflow: "hidden",
   },
-  loginFlexBox: {
+  loginFlexBox1: {
+    width: 71,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  loginFlexBox2: {
     width: 71,
     justifyContent: "space-between",
     flexDirection: "row",
@@ -63,7 +71,7 @@ const styles = StyleSheet.create({
   textTypo: {
     height: 17,
     fontFamily: FontFamily.interBold,
-    fontWeight: "700",
+    fontWeight: "100",
     fontSize: FontSize.size_mini,
     textAlign: "left",
     color: Color.colorBlack,
@@ -87,12 +95,14 @@ const styles = StyleSheet.create({
     width: 255,
   },
   login2: {
+    marginLeft: 10,
     width: 53,
-    textDecoration: "underline",
     height: 17,
+    
   },
   login: {
     height: 23,
+    
   },
   text: {
     width: 6,
@@ -103,8 +113,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.interBold,
     fontWeight: "700",
     fontSize: FontSize.size_mini,
-    textDecoration: "underline",
-    textAlign: "left",
+    textAlign: "center",
     color: Color.colorBlack,
   },
   frame: {
@@ -116,7 +125,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   welcome: {
-    backgroundColor: Color.colorDarkseagreen,
+    backgroundColor: "#8fd296",
     flex: 1,
     height: 840,
     paddingLeft: 87,

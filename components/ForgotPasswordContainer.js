@@ -1,170 +1,165 @@
-import * as React from "react";
-import { StyleSheet, View, Text } from "react-native";
-import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
+import React, { useState } from "react";
+import { Text, StyleSheet, View, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Color, FontSize, FontFamily, Border, Padding } from "../GlobalStyles";
 
 const ForgotPasswordContainer = () => {
+  const [newpass, setNewpass] = useState("");
+  const [cnfrmnewpass, setCnfrmnewpass] = useState("");
+  const navigation = useNavigation();
+
+  const handleLogin = () => {
+    // Add your login logic here
+    if (!newpass || !cnfrmnewpass) {
+      alert("Both password fields are required.");
+      // Perform authentication, e.g., API request, validation, etc.
+      // If successful, navigate to the next screen
+    } else if  (newpass === cnfrmnewpass){
+      navigation.navigate("LogIn");
+    } else {
+      alert("Passwords do not match. Please check again.");
+    }
+  };
+
   return (
-    <View style={styles.cnfrmbtnParent}>
-      <View style={styles.cnfrmbtn}>
-        <View style={[styles.cnfrmbtnChild, styles.cnfrmbtnChildPosition]} />
-        <Text style={styles.confirm}>Confirm</Text>
-      </View>
-      <View style={[styles.confirmNewpass, styles.newPassPosition]}>
-        <View style={[styles.inputfield, styles.inputfieldLayout]}>
-          <View style={[styles.inputfieldChild, styles.titlePosition]} />
-          <Text style={[styles.confirmNewPassword, styles.passwordTypo]}>
-            Confirm New Password
-          </Text>
-        </View>
-        <Text style={[styles.emailTitle, styles.emailTypo]}>
-          Confirm New Password
-        </Text>
-      </View>
-      <View style={[styles.newPass, styles.newPassPosition]}>
-        <View style={[styles.inputfield, styles.inputfieldLayout]}>
-          <View style={[styles.inputfieldChild, styles.titlePosition]} />
-          <Text style={[styles.confirmNewPassword, styles.passwordTypo]}>
-            New Password
-          </Text>
-        </View>
-        <Text style={[styles.emailTitle1, styles.emailTypo]}>New Password</Text>
-      </View>
-      <View style={[styles.title, styles.titlePosition]}>
-        <Text style={[styles.forgotPassword, styles.passwordTypo]}>
-          Forgot Password
-        </Text>
-      </View>
-    </View>
+    <KeyboardAvoidingView
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    style={styles.forgpassform}
+    >
+    
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+
+          <View style={styles.title}>
+            <View style={styles.forgpassWrapper}>
+              <Text style={styles.forgpass}>Forgot Password</Text>
+            </View>
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.newpassTitle}>New Password</Text>
+            <TextInput
+              style={styles.inputfield1}
+              value={newpass}
+              onChangeText={setNewpass}
+              placeholder="New Password"
+              keyboardType="default"
+              autoCapitalize="none"
+              placeholderTextColor="rgba(0, 0, 0, 0.45)"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.cnfrmnewpassTitle}>Confirm New Password</Text>
+            <TextInput
+              style={styles.inputfield2}
+              value={cnfrmnewpass}
+              onChangeText={setCnfrmnewpass}
+              placeholder="Confirm New Password"
+              secureTextEntry
+              placeholderTextColor="rgba(0, 0, 0, 0.45)"
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.cnfrmButton}
+              onPress={handleLogin}
+            >
+              <Text style={styles.cnfrmText}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+
+      </ScrollView>
+    </KeyboardAvoidingView>    
   );
 };
 
 const styles = StyleSheet.create({
-  cnfrmbtnChildPosition: {
-    left: "0%",
-    top: "0%",
-    height: "100%",
-  },
-  newPassPosition: {
-    height: "22.38%",
-    left: "0%",
-    right: "0%",
-    width: "100%",
-    position: "absolute",
-  },
-  inputfieldLayout: {
-    height: 42,
-    width: 292,
-    left: 0,
-  },
-  titlePosition: {
-    top: 0,
-    position: "absolute",
-  },
-  passwordTypo: {
-    textAlign: "left",
-    fontFamily: FontFamily.interBold,
-    fontWeight: "700",
-    position: "absolute",
-  },
-  emailTypo: {
-    fontSize: FontSize.size_lg,
-    height: "32.47%",
-    textAlign: "left",
-    color: Color.colorBlack,
-    fontFamily: FontFamily.interBold,
-    fontWeight: "700",
-    left: "0%",
-    top: "0%",
-    position: "absolute",
-  },
-  cnfrmbtnChild: {
-    bottom: "0%",
-    borderRadius: Border.br_4xs,
-    backgroundColor: Color.colorMediumseagreen,
-    right: "0%",
-    width: "100%",
-    left: "0%",
-    top: "0%",
-    height: "100%",
-    position: "absolute",
-  },
-  confirm: {
-    height: "58.97%",
-    width: "67.05%",
-    top: "28.21%",
-    left: "15.91%",
-    textAlign: "center",
-    color: Color.colorBlack,
-    fontFamily: FontFamily.interBold,
-    fontWeight: "700",
-    fontSize: FontSize.size_base,
-    position: "absolute",
-  },
-  cnfrmbtn: {
-    top: 305,
-    left: 18,
-    width: 264,
-    height: 39,
-    position: "absolute",
-  },
-  inputfieldChild: {
-    borderRadius: Border.br_3xs,
-    backgroundColor: Color.colorGray_200,
-    borderStyle: "solid",
-    borderColor: Color.colorBlack,
-    borderWidth: 1,
-    height: 42,
-    width: 292,
-    left: 0,
-  },
-  confirmNewPassword: {
-    height: "50%",
-    width: "92.81%",
-    top: "30.95%",
-    left: "3.42%",
-    color: Color.colorGray_300,
-    fontSize: FontSize.size_base,
-    textAlign: "left",
-  },
-  inputfield: {
-    top: 35,
-    position: "absolute",
-  },
-  emailTitle: {
-    width: "72.24%",
-  },
-  confirmNewpass: {
-    top: "57.85%",
-    bottom: "19.77%",
-  },
-  emailTitle1: {
-    width: "45.48%",
-  },
-  newPass: {
-    top: "27.03%",
-    bottom: "50.58%",
-  },
-  forgotPassword: {
-    width: "92.73%",
-    fontSize: FontSize.size_13xl,
-    lineHeight: 60,
-    color: Color.colorBlack,
-    left: "0%",
-    top: "0%",
-    height: "100%",
-    textAlign: "left",
+  forgpassform: {
+    flex: 1,
+    alignSelf: "center",
+    alignItems: "center",
+    width: 300,
+    marginLeft: 16,
   },
   title: {
-    left: 8,
-    width: 284,
-    height: 56,
+    overflow: "hidden",
+    width: 290,
+    justifyContent: "center",
   },
-  cnfrmbtnParent: {
-    top: 360,
-    left: 66,
-    width: 299,
-    height: 344,
-    position: "absolute",
+  forgpassWrapper: {
+    width: 220,
+    height: 39,
+    alignSelf: "center",
+  },
+  forgpass: {
+    fontSize: FontSize.size_9xl,
+    fontFamily: FontFamily.interBold,
+    fontWeight: "700",
+    color: Color.colorBlack,
+  },
+  inputContainer: {
+    marginTop: 44,
+    alignSelf: "stretch",
+  },
+  newpassTitle: {
+    fontSize: FontSize.size_xl,
+    width: 136,
+    height: 25,
+    fontFamily: FontFamily.interBold,
+    fontWeight: "700",
+    color: Color.colorBlack,
+    marginTop: -25,
+    
+  },
+  cnfrmnewpassTitle:{
+    fontSize: FontSize.size_xl,
+    width: 136,
+    height: 25,
+    fontFamily: FontFamily.interBold,
+    fontWeight: "700",
+    color: Color.colorBlack,
+    marginTop: -20,
+  },
+  inputfield1: {
+    borderRadius: Border.br_3xs,
+    backgroundColor: "#fff",
+    height: 42,
+    paddingHorizontal: Padding.p_3xs,
+    paddingVertical: Padding.p_5xs,
+    marginTop: 5,
+    alignSelf: "stretch",
+    borderWidth: 3,
+    borderColor: Color.colorBlack,
+    borderStyle: "solid",
+  },
+  inputfield2: {
+    borderRadius: Border.br_3xs,
+    backgroundColor: "#fff",
+    height: 42,
+    paddingHorizontal: Padding.p_3xs,
+    paddingVertical: Padding.p_5xs,
+    marginTop: 5,
+    alignSelf: "stretch",
+    borderWidth: 3,
+    borderColor: Color.colorBlack,
+    borderStyle: "solid",
+  },
+  buttonContainer: {
+    marginTop: 30,
+    alignItems: "center",
+  
+  },
+  cnfrmButton: {
+    backgroundColor: "#BC58B2", // Change the background color here
+    borderRadius: Border.br_3xs,
+    height: 42,
+    width: 230,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cnfrmText: {
+    fontSize: FontSize.size_base,
+    fontFamily: FontFamily.interBold,
+    fontWeight: "700",
+    color: "#fff",
   },
 });
 

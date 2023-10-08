@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, Border, FontSize, FontFamily } from "../GlobalStyles";
 
 const UploadImageFormContainer = () => {
-  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+  const navigation = useNavigation();
 
   return (
     <View style={styles.capture}>
