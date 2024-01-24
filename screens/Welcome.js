@@ -18,9 +18,9 @@ const Welcome = () => {
     <View style={[styles.welcome, styles.logoFlexBox]}>
       <View style={[styles.logo, styles.logoFlexBox]}>
         <Image
-          style={styles.psychiatry2Icon}
+          style={styles.Icon}
           contentFit="cover"
-          source={require("../assets/psychiatry-2.png")}
+          source={require("../assets/logo4.png")}
         />
         <Text style={styles.treense}>TREENSE</Text>
       </View>
@@ -76,16 +76,17 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: Color.colorBlack,
   },
-  psychiatry2Icon: {
+  Icon: {
     alignSelf: "stretch",
     maxWidth: "100%",
-    height: 287,
+    height: 320,
     overflow: "hidden",
     width: "100%",
   },
   treense: {
     fontSize: FontSize.size_5xl,
     fontFamily: FontFamily.holtwoodOneSC,
+    left: 10,
     width: 140,
     height: 55,
     textAlign: "left",

@@ -8,9 +8,8 @@ import Photo from "./screens/Photo";
 import ForgotPass from "./screens/ForgotPass";
 import LogIn from "./screens/LogIn";
 import Registeration from "./screens/Registeration";
-
+import Chatbox from "./screens/Chatbox";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text, Pressable, TouchableOpacity } from "react-native";
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
@@ -19,7 +18,7 @@ const App = () => {
     "Inter-Bold": require("./assets/fonts/Inter-Bold.ttf"),
     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
     "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
-  });
+  }); 
 
   if (!fontsLoaded && !error) {
     return null;
@@ -46,6 +45,11 @@ const App = () => {
             <Stack.Screen
               name="Photo"
               component={Photo}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Chatbox"
+              component={Chatbox}
               options={{ headerShown: false }}
             />
             <Stack.Screen

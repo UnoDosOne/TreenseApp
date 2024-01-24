@@ -11,44 +11,79 @@ const SignUpForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const navigation = useNavigation();
   const [isPasswordVisible, setPasswordVisibility] = useState(false);
   const [isPasswordVisible2, setPasswordVisibility2] = useState(false);
-  
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisibility(!isPasswordVisible);
+  };
+
+  const togglePasswordVisibility2 = () => {
+    setPasswordVisibility2(!isPasswordVisible2);
+  };
+
+  const handleSignUp = async () => {
+    try {
+      // Validate the email format
+      if (!firstName || !lastName || !phoneNumber) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+      if (!isEmailValid(email)) {
+        alert("Invalid email format. Please enter a valid email address.");
+        return;
+      }
+
+      // Check if passwords match
+      if (password !== confirmPassword) {
+        alert("Passwords do not match. Please re-enter your password.");
+        return;
+      }
+
+      // Hash the password before sending it to the server
+      const hashedPassword = await hashPassword(password);
+
+      // Send user data to the server for further processing (e.g., store in the database)
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        phoneNumber,
+      };
+
+      // You should replace the URL and method with your actual server endpoint
+      const response = await fetch("http://localhost:3000/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      // Handle the response from the server
+      if (response.ok) {
+        // Successful registration
+        navigation.navigate("LogIn");
+      } else {
+        // Handle registration failure
+        const errorData = await response.json();
+        alert(`Registration failed: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error("Error registering user:", error);
+    }
+  };
+
+  const hashPassword = async (password) => {
+    const saltRounds = 10;
+    return bcrypt.hash(password, saltRounds);
+  };
 
   const isEmailValid = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return emailRegex.test(email);
-  };
-
-  const handleSignUp = () => {
-    // Validate the email format    
-    if (!firstName || !lastName || !phoneNumber) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-    if (!isEmailValid(email)) {
-      alert("Invalid email format. Please enter a valid email address.");
-      return;
-    }
-
-    // Check if passwords match
-    if (password !== confirmPassword) {
-      alert("Passwords do not match. Please re-enter your password.");
-      return;
-    }
-    // Perform sign-up logic here (you can add this logic)
-
-    // After successful sign-up, navigate to the next screen (e.g., Home)
-    navigation.navigate("LogIn");
-  };
-  
-  const togglePasswordVisibility = () => {
-    setPasswordVisibility(!isPasswordVisible);
-  };
-  const togglePasswordVisibility2 = () => {
-    setPasswordVisibility2(!isPasswordVisible2);
   };
 
   return (
@@ -106,8 +141,8 @@ const SignUpForm = () => {
               placeholderTextColor="rgba(0, 0, 0, 0.45)"
             />
             <TouchableOpacity onPress={togglePasswordVisibility}>
-              <Image 
-                source={isPasswordVisible ? HiddenEyeIcon : EyeIcon} 
+              <Image
+                source={isPasswordVisible ? HiddenEyeIcon : EyeIcon}
                 style={styles.eyeIcon}
               />
             </TouchableOpacity>
@@ -125,23 +160,12 @@ const SignUpForm = () => {
               placeholderTextColor="rgba(0, 0, 0, 0.45)"
             />
             <TouchableOpacity onPress={togglePasswordVisibility2}>
-              <Image 
-                source={isPasswordVisible2 ? HiddenEyeIcon : EyeIcon} 
+              <Image
+                source={isPasswordVisible2 ? HiddenEyeIcon : EyeIcon}
                 style={styles.eyeIcon}
               />
             </TouchableOpacity>
           </View>
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.phoneTitle}>Phone Number</Text>
-          <TextInput
-            style={styles.phoneinputfield}
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-            placeholder="Phone Number"
-            keyboardType="phone-pad"
-            placeholderTextColor="rgba(0, 0, 0, 0.45)"
-          />
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -155,6 +179,7 @@ const SignUpForm = () => {
     </KeyboardAvoidingView>
   );
 };
+
 
 const styles = StyleSheet.create({
   signupform: {

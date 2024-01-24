@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, FontSize, FontFamily, Border, Padding } from "../GlobalStyles";
 
 const ForgotPasswordContainer = () => {
-  const [newpass, setNewpass] = useState("");
+  const [email, setEmail] = useState("");
   const [cnfrmnewpass, setCnfrmnewpass] = useState("");
   const navigation = useNavigation();
 
@@ -35,11 +35,11 @@ const ForgotPasswordContainer = () => {
             </View>
           </View>
           <View style={styles.inputContainer}>
-            <Text style={styles.newpassTitle}>New Password</Text>
+            <Text style={styles.newpassTitle}>Enter Email</Text>
             <TextInput
               style={styles.inputfield1}
-              value={newpass}
-              onChangeText={setNewpass}
+              value={email}
+              onChangeText={setEmail}
               placeholder="New Password"
               keyboardType="default"
               autoCapitalize="none"
@@ -47,7 +47,7 @@ const ForgotPasswordContainer = () => {
             />
           </View>
           <View style={styles.inputContainer}>
-            <Text style={styles.cnfrmnewpassTitle}>Confirm New Password</Text>
+            <Text style={styles.cnfrmnewpassTitle}>New Password</Text>
             <TextInput
               style={styles.inputfield2}
               value={cnfrmnewpass}

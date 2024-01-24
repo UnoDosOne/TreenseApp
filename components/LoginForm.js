@@ -28,7 +28,7 @@ const LoginForm = () => {
 
     if (user) {
       // Authentication successful, navigate to the next screen
-      navigation.navigate("Photo");
+      navigation.navigate("Chatbox");
     } else {
       // Authentication failed, show an error message
       alert("Invalid email or password. Please try again.");
