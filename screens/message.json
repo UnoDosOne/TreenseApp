@@ -1,0 +1,18 @@
+
+{
+  "healthMessages": {
+    "healthyfalcata": "The tree you uploaded appears to be healthy condition.",
+    "Rust": {
+      "message": "If you uploaded the right image, this tree may have signs of gall rust disease. It is an air-borne fungal disease caused by Uromycladium falcatarium. An infected falcata tree can spread the disease to an entire plantation when not treated immediately.",
+      "details": "Rust disease can cause discoloration and damage to the leaves, another indication of the disease is the formation of “galls” or swelling on stems and branches. affecting the overall health of the tree.",
+      "preventionSteps": " Conduct field trials to test various control measures and select the most effective ones for your situation.\n Prune infected branches as soon as possible to prevent spore production and spread of the disease.\n Apply fungicides where necessary to protect susceptible trees from infection.",
+      "combatSteps": "If your tree is already affected, prune the infected branches and treat with appropriate fungicides."
+    },
+    "default": "I am not sure about the health of the tree."
+  },
+  "encouragementMessages": [
+    "Feel free to upload another image for analysis!",
+    "Great job! Want to analyze another tree?",
+    "Isn't that awesome? care to upload more?"
+  ]
+}

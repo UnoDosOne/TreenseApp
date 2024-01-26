@@ -17,6 +17,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
+import messagesData from './message.json';
 
 const Chatbox = () => {
   const [messages, setMessages] = useState([]);
@@ -26,15 +27,12 @@ const Chatbox = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    // Set the introductory message when the component mounts
+
     const delayTime1 = 3000;
 
-    // Set isTyping to true before the delay
     setIsTyping(true);
 
-    // Use setTimeout to delay the execution of the introductory message
     setTimeout(() => {
-      // Assuming GiftedChat message format for the introductory message
       const introMessage = {
         _id: 0,
         text: "Welcome to Treense! Feel free to upload photos of trees for me to analyse!",
@@ -44,11 +42,8 @@ const Chatbox = () => {
           name: "Treense",
         },
       };
-
-      // Set the introductory message after the delay
       setMessages([introMessage]);
 
-      // Set isTyping to false after the delay
       setIsTyping(false);
     }, delayTime1);
   }, []);
@@ -69,10 +64,9 @@ const Chatbox = () => {
       });
 
       if (!result.canceled && result.assets.length > 0) {
-        // Create a new message with the image URI
         const newMessage = {
           _id: new Date().getTime(),
-          image: result.assets[0].uri, // Access the URI within the first asset
+          image: result.assets[0].uri,
           createdAt: new Date(),
           user: {
             _id: 1,
@@ -80,12 +74,10 @@ const Chatbox = () => {
           },
         };
 
-        // Update the state to include the new message
         setMessages((previousMessages) =>
           GiftedChat.append(previousMessages, newMessage)
         );
 
-        // Now you can send the image to the Roboflow model and update the message later
         sendImageToRoboflow(result.assets[0].uri);
       }
     } catch (error) {
@@ -108,10 +100,10 @@ const Chatbox = () => {
       });
 
       if (!result.canceled && result.assets.length > 0) {
-        // Create a new message with the image URI
+
         const newMessage = {
           _id: new Date().getTime(),
-          image: result.assets[0].uri, // Access the URI within the first asset
+          image: result.assets[0].uri,
           createdAt: new Date(),
           user: {
             _id: 1,
@@ -119,12 +111,10 @@ const Chatbox = () => {
           },
         };
 
-        // Update the state to include the new message
         setMessages((previousMessages) =>
           GiftedChat.append(previousMessages, newMessage)
         );
 
-        // Now you can send the image to the Roboflow model and update the message later
         sendImageToRoboflow(result.assets[0].uri);
       }
     } catch (error) {
@@ -134,88 +124,149 @@ const Chatbox = () => {
 
   const sendImageToRoboflow = async (imageUri) => {
     try {
-      // Set isTyping to true before making the API call
       setIsTyping(true);
-
+  
       let base64Img = await FileSystem.readAsStringAsync(imageUri, {
         encoding: FileSystem.EncodingType.Base64,
       });
-
+  
       base64Img = `data:image/jpg;base64,${base64Img}`;
-
+  
       axios({
         method: "POST",
-        url: "https://classify.roboflow.com/treense/1?api_key=pnHKQq7IhPYTY8LpehFz",
+        url: "https://detect.roboflow.com/falcataria/5?api_key=H9lu6r4sXgYKQoRQa4Wp",
         data: base64Img,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       }).then((res) => {
         console.log("Results", res.request._response);
-
+  
         const responseData = res.data;
-        const top = responseData.top;
-
-        // Create a bot message based on the analysis results
+        const predicted_classes = responseData.predicted_classes;
+  
         let botMessageText;
-        if (top === "healthy") {
-          botMessageText = (
-            <Text>
-              The tree you uploaded appears to be{" "}
-              <Text style={{ color: "green" }}>healthy</Text>.
-            </Text>
-          );
-        } else if (top === "unhealthy") {
-          botMessageText = (
-            <Text>
-              This tree may be in{" "}
-              <Text style={{ color: "red" }}>unhealthy</Text> condition, please
-              seek expert advice.
-            </Text>
-          );
+        let botMessageDetails;
+        let botPreventionSteps;
+        let botCombatSteps;
+  
+        if (predicted_classes in messagesData.healthMessages) {
+          const healthMessage = messagesData.healthMessages[predicted_classes];
+  
+          if (typeof healthMessage === 'string') {
+
+            botMessageText = healthMessage;
+          } else if (typeof healthMessage === 'object' && healthMessage.message) {
+
+            botMessageText = healthMessage.message;
+
+            botMessageDetails = healthMessage.details;
+
+            botPreventionSteps = healthMessage.preventionSteps;
+  
+            botCombatSteps = healthMessage.combatSteps;
+          }
         } else {
-          botMessageText = "I am not sure about the health of the tree.";
+
+          botMessageText = messagesData.healthMessages.default;
+        }
+  
+        let delayTime = 3000; 
+        const delayIncrement = 1000; 
+
+        if (botMessageText) {
+
+          const healthMessage = {
+            _id: new Date().getTime() + 1,
+            text: botMessageText,
+            createdAt: new Date(),
+            user: {
+              _id: 2,
+              name: "Treense",
+            },
+            image: imageUri,
+          };
+
+          setIsTyping(true);
+          setTimeout(() => {
+
+            setMessages((previousMessages) =>
+              GiftedChat.append(previousMessages, healthMessage)
+            );
+
+            setIsTyping(false);
+          }, delayTime);
+  
+          delayTime += delayIncrement;
         }
 
-        // Assuming GiftedChat message format for the bot message
-        const botMessage = {
-          _id: new Date().getTime() + 1,
-          text: botMessageText,
+        if (botCombatSteps) {
+
+          const combatMessage = {
+            _id: new Date().getTime() + 5,
+            text: `Combat Steps: ${botCombatSteps}`,
+            createdAt: new Date(),
+            user: {
+              _id: 2,
+              name: "Treense",
+            },
+          };
+
+          setIsTyping(true);
+          setTimeout(() => {
+
+            setMessages((previousMessages) =>
+              GiftedChat.append(previousMessages, combatMessage)
+            );
+
+            setIsTyping(false);
+          }, delayTime);
+
+          delayTime += delayIncrement;
+        }
+
+      // Display information about prevention steps (if available)
+      if (botPreventionSteps) {
+        // Assuming GiftedChat message format for the prevention steps
+        const preventionMessage = {
+          _id: new Date().getTime() + 3,
+          text: `Prevention Steps:\n${botPreventionSteps
+            .split('\n')
+            .map((point) => `\u2022 ${point}`)
+            .join('\n')}`, // Concatenate the steps into a single string
           createdAt: new Date(),
           user: {
             _id: 2,
             name: "Treense",
           },
-          image: imageUri,
         };
 
-        // Update the state to include the bot message
-        setMessages((previousMessages) =>
-          GiftedChat.append(previousMessages, botMessage)
-        );
+        // Use setTimeout to add a delay before sending the prevention message
+        setIsTyping(true);
+        setTimeout(() => {
+          // Update the state to include the prevention message
+          setMessages((previousMessages) =>
+            GiftedChat.append(previousMessages, preventionMessage)
+          );
+          // Set isTyping to false after the prevention message is added
+          setIsTyping(false);
+        }, delayTime);
 
-        // Set isTyping to false after the responses are generated
-        setIsTyping(false);
+        // Increment delay time for the next message
+        delayTime += delayIncrement;
+      }
 
-        // Set a time delay (e.g., 5000 milliseconds or 5 seconds) for the encouragement message
-        const delayTime = 5000;
-
-        const encouragementMessages = [
-          "Feel free to upload another image for analysis!",
-          "Great job! Want to analyze another tree?",
-          "Thats awesome, care to upload more?",
-        ];
-        // Randomly select an encouragement message
+        const encouragementMessages = messagesData.encouragementMessages;
         const randomEncouragementMessage =
           encouragementMessages[
             Math.floor(Math.random() * encouragementMessages.length)
           ];
-        // Use setTimeout to delay the execution of the encouragement message
+        
         setIsTyping(true);
         setTimeout(() => {
-          // Assuming GiftedChat message format for the encouragement message
+
           const encourageMessage = {
-            _id: new Date().getTime() + 2,
+            _id: new Date().getTime() + 6,
             text: randomEncouragementMessage,
             createdAt: new Date(),
             user: {
@@ -223,19 +274,19 @@ const Chatbox = () => {
               name: "Treense",
             },
           };
-          // Update the state to include the encouragement message
+
           setMessages((previousMessages) =>
             GiftedChat.append(previousMessages, encourageMessage)
           );
-          // Set isTyping to false after the encouragement message is added
+
           setIsTyping(false);
         }, delayTime);
       });
     } catch (error) {
       console.error(error);
     }
-  };
-
+  };  
+  
   const renderInputToolbar = () => {
     return (
       <View
@@ -252,7 +303,7 @@ const Chatbox = () => {
             alignItems: "center",
             backgroundColor: "#43D338",
             paddingVertical: 5,
-            paddingHorizontal: 90,
+            paddingHorizontal: 75,
             borderWidth: 2,
             borderRadius: 20,
           }}
@@ -265,6 +316,7 @@ const Chatbox = () => {
           style={{
             alignSelf: "center",
             backgroundColor: "#43D338",
+            marginRight: 25,
             paddingVertical: 5,
             paddingHorizontal: 20,
             borderWidth: 2,
@@ -279,10 +331,10 @@ const Chatbox = () => {
   };
 
   const renderAvatar = (props) => {
-    // Customize the avatar for each message
+
     return (
       <View style={{ marginRight: 5 }}>
-        {/* <MaterialIcons name="android" size={32} color="green" /> */}
+
         <Image
           source={require("../assets/avatar.png")}
           style={{
@@ -356,13 +408,13 @@ const Chatbox = () => {
             animationIn="fadeIn"
             animationOut="fadeOut"
             animationInTiming={1000}
-            animationOutTiming={500}    // Adjust the timing as needed
+            animationOutTiming={500}    
             style={{
               position: 'absolute',
-              top: 20 + 10 + 10, // Adjust these values
+              top: 20 + 10 + 10, 
               right: 15,
               margin: 0,
-            }}   // Remove default margin
+            }}  
           >
             <View style={{ backgroundColor: 'white', padding: 5 ,borderRadius: 10, }}>
 
@@ -390,7 +442,7 @@ const Chatbox = () => {
             isTyping={isTyping}
             renderInputToolbar={renderInputToolbar}
             renderBubble={renderBubble}
-            renderAvatar={renderAvatar} // Add this line to use the custom avatar renderer
+            renderAvatar={renderAvatar} 
             listViewProps={{
               style: {
                 width: "100%",
